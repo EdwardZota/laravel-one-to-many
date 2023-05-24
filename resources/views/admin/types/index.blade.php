@@ -10,6 +10,7 @@
                 <th scope="col">Id</th>
                 <th scope="col">Nome</th>
                 <th scope="col">Slug</th>
+                <th scope="col">Nome Progetti</th>
                 <th scope="col">azioni</th>
             </tr>
             </thead>
@@ -19,6 +20,13 @@
                         <th>{{$type->id}}</th>
                         <td>{{$type->name}}</td>
                         <td>{{$type->slug}}</td>
+                        <td>
+                            @foreach ($projects as $project)
+                                @if ($project->type_id == $type->id)
+                                    <span>{{$project->title}}</span>
+                                @endif
+                            @endforeach
+                        </td>
                         <td class="d-flex">
                             <div class="me-2 my-2">
                                 <a href="{{route('admin.types.edit',['type'=>$type->slug])}}" class="btn btn-warning">Modifica</a>
