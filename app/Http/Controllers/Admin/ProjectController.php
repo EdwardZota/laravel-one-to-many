@@ -7,6 +7,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Models\Type;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -30,7 +31,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('admin.projects.create');
+        $types=Type::all();
+        return view('admin.projects.create',compact('types'));
     }
 
     /**
@@ -45,13 +47,19 @@ class ProjectController extends Controller
 
         $data['post_slug'] = Str::slug($request->title,'-');
 
+        $checkProject = Project::where('post_slug', $data['post_slug'])->first();
+
+        if($checkProject){
+            return back()->withInput()->withErrors(['post_slug' => 'Con quersto titolo crei uno slug doppiato,perfavore cambia titolo']);
+        }
+
         $newProject = new Project();
 
         $newProject->fill($data);//
                                  //--> $newProject = Project::create($data);
         $newProject->save();     //
 
-        return redirect()->route('admin.projects.show',['project'=>$newProject->id]);
+        return redirect()->route('admin.projects.show',['project'=>$newProject->post_slug]);
 
     }
 
@@ -63,6 +71,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+
         return view('admin.projects.show',compact('project'));
     }
 
@@ -75,7 +84,8 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
 
-        return view('admin.projects.edit',compact('project'));
+        $types=Type::all();
+        return view('admin.projects.edit',compact('project','types'));
     }
 
     /**
@@ -87,11 +97,18 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        $request = $request->validated();
+        $data = $request->validated();
         $data['post_slug'] = Str::slug($request->title,'-');
-        $project->update();
 
-        return redirect()->route('admin.projects.show',['project'=>$project->id]);
+        $checkProject = Project::where('post_slug',$data['post_slug'])->where('id','<>',$project->id)->first();
+
+        if($checkProject){
+            return back()->withInput()->withErrors(['slug' => 'impossibile creare uno slug']);
+        }
+
+        $project->update($data);
+
+        return redirect()->route('admin.projects.show',['project'=>$project->post_slug]);
     }
 
     /**

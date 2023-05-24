@@ -31,6 +31,7 @@ class UpdateProjectRequest extends FormRequest
             'description' => 'nullable|max:65000',
             'link' => 'nullable|url|max:255',
             'preview_image' => 'nullable|url|max:255',
+            'type_id' => 'nullable|exists:types,id'
         ];
 
     }
@@ -47,7 +48,9 @@ class UpdateProjectRequest extends FormRequest
             'link.max' => 'Lunghezza massima link di 255 caratteri',
 
             'preview_image.url' => 'L\'URL inserito non è valido',
-            'preview_image.max' => 'Lunghezza massima pewview image link di 255 caratteri',
+            'preview_image.max' => 'Lunghezza massima preview image link di 255 caratteri',
+
+            'type_id.exists' => 'Il valore inserito non è accettabile'
 
         ];
     }

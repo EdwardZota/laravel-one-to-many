@@ -17,7 +17,7 @@
             <i class="fa-light fa-list-tree"></i>
             <a href="{{ route('admin.projects.index') }}" class="nav-link text-white ps-1" >
                 <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
-                Projects <small> v</small>
+                Projects
               </a>
         </button>
         <div class="collapse show" id="dashboard-collapse">
